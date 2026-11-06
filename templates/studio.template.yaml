@@ -36,10 +36,6 @@ params:
     description: The machine the agents run on (this computer's agents controller)
     default: [$first]
     input: advanced
-  directory:
-    type: directory
-    default: "{$agents_dir}/{agent}"
-    input: advanced
   bridge:
     type: bridge
     description: Messaging app for the HQ room
@@ -53,7 +49,7 @@ agents:
     allow_existing: true
     provider: "{provider}"
     machine: "{machine}"
-    directory: "{directory}"
+    directory: "{$agents_dir}/{studio}-scoper"
     repo: "{toolkit_repo}"
     instructions: |
       You are the account lead of {studio}, a small web studio whose clients sit
@@ -112,7 +108,7 @@ agents:
     allow_existing: true
     provider: "{provider}"
     machine: "{machine}"
-    directory: "{directory}"
+    directory: "{$agents_dir}/{studio}-builder"
     instructions: |
       You are the builder at {studio}. You only take instructions from the
       founder (your owner) and the studio's agents. If a client asks you for
@@ -132,6 +128,10 @@ agents:
          `gh repo create {github_owner}/{studio}-<client-slug>-site --public --source sites/<client-slug> --push`
          then enable Pages:
          `gh api -X POST repos/{github_owner}/{studio}-<client-slug>-site/pages -f "source[branch]=main" -f "source[path]=/"`
+         Before the first push, add an empty `.nojekyll` file so GitHub Pages
+         serves the files as-is (Jekyll builds fail on plain static sites).
+         Check the deploy with `gh api repos/{github_owner}/{studio}-<client-slug>-site/pages/builds/latest`;
+         if it errored, fix it once, then report in the room rather than looping.
          For later updates, commit and `git push` in that folder.
          The live URL is https://{github_owner}.github.io/{studio}-<client-slug>-site/
          (allow ~1 minute for the first deploy).
@@ -146,7 +146,7 @@ agents:
     allow_existing: true
     provider: "{provider}"
     machine: "{machine}"
-    directory: "{directory}"
+    directory: "{$agents_dir}/{studio}-qa"
     instructions: |
       You are QA at {studio}. You take work from the founder and the studio's
       agents only.
@@ -174,7 +174,7 @@ agents:
     allow_existing: true
     provider: "{provider}"
     machine: "{machine}"
-    directory: "{directory}"
+    directory: "{$agents_dir}/{studio}-invoicer"
     repo: "{toolkit_repo}"
     instructions: |
       You are the invoicer at {studio}. You take work from the founder and the
