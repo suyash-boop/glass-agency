@@ -6,7 +6,11 @@ Built for the [Flip the Switch hackathon](https://www.wemakedevs.org/hackathons/
 
 > Small agencies and freelancers lose hours every week to "what's the status?" emails, scope creep, and quotes nobody double-checked. Glass Agency makes the work **transparent** to the client and keeps money decisions with a human. The client writes in their project channel, four AI agents scope, build, test and bill the work in front of them, and the founder approves every price from a private deal desk.
 
-<!-- TODO: demo video link + GIF -->
+**🎬 Demo video:** _coming soon_
+
+| The studio's AI staff checks in | A client room the client can see | The private deal desk |
+|---|---|---|
+| ![HQ](docs/screenshots/02-glass-hq-agents-check-in.png) | ![Client room](docs/screenshots/04-client-room-welcome.png) | ![Deal desk](docs/screenshots/05-deal-desk.png) |
 
 ---
 
@@ -92,21 +96,37 @@ Open Switch Console → **Get started** → **On this computer** → **Start** �
 Follow [Connect Discord](https://docs.switchagents.ai/switch-rooms/deploy/messaging-apps/discord): create a bot application, enable **Server Members** + **Message Content** intents, invite it with `bot` + `applications.commands` and the listed permissions, then in Console **Home → Messaging apps → Connect → Discord** (bot token + server id) and **Link** your Discord account.
 
 ### 3. Create the studio
-Console → **Templates → Import template** → `templates/studio.template.yaml` → **Use**. Set *GitHub owner* to your GitHub username and *Toolkit repository* to your fork of this repo → **Create all**. Four agents and `#glass-hq` appear; each agent introduces itself.
+In Console → **Templates → Import template**, import both templates and save them (**Shared**) as:
+- `templates/studio.template.yaml` → **glass studio**
+- `templates/new-client.template.yaml` → **glass new client** (the scoper looks it up by this name)
+
+If you fork this repo, edit the `toolkit_repo` and `github_owner` defaults in `studio.template.yaml` first.
+
+Then let an agent run it. In the **switch-buddy** chat in Console:
+
+> Run my saved group template "glass studio" with its defaults: studio = glass, provider = claude, on my machine, bridge = Discord.
+
+![switch-buddy hires the studio](docs/screenshots/01-switch-buddy-hires-the-studio.png)
+
+Four agents and a private `#glass-hq` channel appear in Discord, and each agent introduces itself. (On macOS you can also use **Use → Create all** in the Templates page. On Windows that form has a bug, see [Windows notes](#windows-notes).)
 
 ### 4. Onboard a client
-Import `templates/new-client.template.yaml`, save it as **glass new client**, then either use it from Console or ask in `#glass-hq`:
+In Discord `#glass-hq`, pick **@glass-scoper** from the autocomplete (it's a Discord *role* Switch creates for each agent) and write the client's username as plain text:
 
 > @glass-scoper onboard a new client: Crumb & Co, slug crumb-and-co, Discord user `<client-username>`
 
-You get `#crumb-and-co` (with the client) and `#crumb-and-co-deal-desk` (private), linked.
+The scoper runs the **glass new client** template itself. You get `#crumb-and-co` (with the client) and `#crumb-and-co-deal-desk` (private), linked.
+
+![Scoper onboards a client](docs/screenshots/03-scoper-onboards-client.png)
 
 ### 5. Play the client
 From the client account, in `#crumb-and-co`:
 
 > @glass-scoper hi! I run a small bakery called Crumb & Co. I need a one-page site with our menu and a WhatsApp order button. Launching Friday.
 
-Approve quotes in the deal desk with "approved". Watch the site get built, deployed and tested.
+Approve quotes in the deal desk with `@glass-scoper approved` (or `@glass-scoper approved at USD 550 total` for a founder discount). Watch the site get built, deployed and tested.
+
+> **Every message meant for an agent must @mention it.** Plain messages and Discord replies are just people talking. Switch only wakes an agent that's addressed.
 
 ## Pricing tool
 
@@ -118,9 +138,13 @@ python tools/pricing.py invoice --client "Crumb & Co" --items landing_page,menu_
 
 Client views never include cost or margin. Rush pricing applies under the rate card's `rush_threshold_days`.
 
-## Windows gotcha we hit (and fixed)
+## Windows notes
 
-If you have the **PostgreSQL "Command Line Tools" only** installed (`C:\Program Files\PostgreSQL\18` without `share\`), Switch Console 0.31 picks it as the database server and setup fails with `initdb: file ".../share/postgres.bki" does not exist`. Fix: point Console at its bundled PostgreSQL 16 by editing `%APPDATA%\switchdash\local-switch-server\native\run\postgres.json`:
+We built this on Windows 11, where Switch Console is early access. We hit two problems and found a workaround for each:
+
+**1. The template form says "No agent type is set up… / Not supported here".** On a local server, the Templates **Use** form maps *This computer* to the embedded agents controller's id and then checks provider availability over **SSH** (`SSH agent socket not found` in `%APPDATA%\switchdash\logs\switch-console.log`). Claude Code is installed and signed in; only the form's check fails. **Workaround:** ask switch-buddy to run the saved template. Agents call `run_template` on the server, which checks the machine directly and works. (We also switched `studio.template.yaml` from a `location` param to a `machine` param.)
+
+**2. Local server setup fails with `initdb … postgres.bki does not exist`.** If you have the **PostgreSQL "Command Line Tools" only** installed (`C:\Program Files\PostgreSQL\18` without `share\`), Switch Console 0.31 picks it as the database server and setup fails with `initdb: file ".../share/postgres.bki" does not exist`. Fix: point Console at its bundled PostgreSQL 16 by editing `%APPDATA%\switchdash\local-switch-server\native\run\postgres.json`:
 
 ```json
 {
@@ -136,6 +160,12 @@ then press Start again (not "Start over").
 - Money is only ever approved by the founder (a human), in a room the client can't read.
 - The client-facing agent is instructed never to reveal costs, margins, or deal-desk content. Room separation means the client never sees that material in the first place.
 - Agents run with Switch's **auto mode**: risky actions (like creating a public repo) ask for approval in the room.
+
+## Limitations and what's next
+- **Progress threads are visible to the client.** Switch posts each agent's `Working…` status (including tool names and paths) in a thread on the triggering message. It's on-brand for a "glass" agency, but a production version would want a client-facing summary mode.
+- **Founder discounts** are passed to the agents in plain words; the next step is a `--target-total` flag in `pricing.py` so negotiated prices flow into invoices automatically.
+- The agents run on the founder's laptop. For 24/7 client rooms, [host Switch on a server](https://docs.switchagents.ai/switch-rooms/deploy/self-host) and onboard a remote machine.
+- Payments aren't wired in; the invoice is a document, not a payment link.
 
 ## Built with
 [Switch](https://github.com/sandbox-quantum/switch) · Claude Code · Discord · GitHub Pages · Python
