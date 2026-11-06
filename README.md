@@ -1,6 +1,11 @@
-# Glass Agency 🪟
+<p align="center">
+  <img src="docs/brand/pane-512.png" alt="Pane, the Glass Agency mascot" width="180" />
+</p>
 
-**A web studio where the client sits in the same Discord channel as your AI staff.**
+<h1 align="center">Glass Agency</h1>
+
+<p align="center"><b>A web studio where the client sits in the same Discord channel as your AI staff.</b><br/>
+<sub>Meet Pane: you can see the work happening inside.</sub></p>
 
 Built for the [Flip the Switch hackathon](https://www.wemakedevs.org/hackathons/switch) · Track 1: Best Business Workflow · Powered by [Switch](https://github.com/sandbox-quantum/switch)
 
