@@ -35,13 +35,13 @@ params:
     type: string
     label: Model for scoper, QA and invoicer
     description: Fast model for chatty, light tasks (Claude Code alias or id)
-    default: haiku
+    default: claude-haiku-5-5
     input: advanced
   builder_model:
     type: string
     label: Model for the builder
     description: Stronger model for writing and shipping the site
-    default: sonnet
+    default: claude-sonnet-5-5
     input: advanced
   machine:
     type: machine
