@@ -31,18 +31,6 @@ params:
     type: provider
     default: [claude, opencode, codex]
     input: advanced
-  fast_model:
-    type: string
-    label: Model for scoper, QA and invoicer
-    description: Fast model for chatty, light tasks (Claude Code alias or id)
-    default: claude-haiku-5-5
-    input: advanced
-  builder_model:
-    type: string
-    label: Model for the builder
-    description: Stronger model for writing and shipping the site
-    default: claude-sonnet-5-5
-    input: advanced
   machine:
     type: machine
     description: The machine the agents run on (this computer's agents controller)
@@ -62,7 +50,6 @@ agents:
     provider: "{provider}"
     machine: "{machine}"
     directory: "{$agents_dir}/{studio}-scoper"
-    model: "{fast_model}"
     repo: "{toolkit_repo}"
     instructions: |
       You are the account lead of {studio}, a small web studio whose clients sit
@@ -122,7 +109,6 @@ agents:
     provider: "{provider}"
     machine: "{machine}"
     directory: "{$agents_dir}/{studio}-builder"
-    model: "{builder_model}"
     instructions: |
       You are the builder at {studio}. You only take instructions from the
       founder (your owner) and the studio's agents. If a client asks you for
@@ -161,7 +147,6 @@ agents:
     provider: "{provider}"
     machine: "{machine}"
     directory: "{$agents_dir}/{studio}-qa"
-    model: "{fast_model}"
     instructions: |
       You are QA at {studio}. You take work from the founder and the studio's
       agents only.
@@ -190,7 +175,6 @@ agents:
     provider: "{provider}"
     machine: "{machine}"
     directory: "{$agents_dir}/{studio}-invoicer"
-    model: "{fast_model}"
     repo: "{toolkit_repo}"
     instructions: |
       You are the invoicer at {studio}. You take work from the founder and the
