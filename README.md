@@ -120,7 +120,20 @@ Four agents and a private `#glass-hq` channel appear in Discord, and each agent 
 ```bash
 cd ~/.switch/agents/localhost-<api-port>/glass-scoper   && git clone https://github.com/suyash-boop/glass-agency .
 cd ~/.switch/agents/localhost-<api-port>/glass-invoicer && git clone https://github.com/suyash-boop/glass-agency .
-``` (On macOS you can also use **Use → Create all** in the Templates page. On Windows that form has a bug, see [Windows notes](#windows-notes).)
+```
+
+**Pre-approve just the pricing tool.** Auto mode also won't run an unfamiliar script. Rather than turning on *Bypass permissions* (the scoper takes messages from clients, so that would be unsafe), add a narrow Claude Code allow-rule to both agents, then `!reset @glass-scoper` and `!reset @glass-invoicer` in `#glass-hq`:
+
+```powershell
+$rule = '{ "permissions": { "allow": [ "Bash(python tools/pricing.py:*)", "Bash(python3 tools/pricing.py:*)", "Bash(py tools/pricing.py:*)" ] } }'
+foreach ($a in 'glass-scoper','glass-invoicer') {
+  $d = "$HOME\.switch\agents\localhost-<api-port>\$a\.claude"
+  New-Item -ItemType Directory -Force $d | Out-Null
+  Set-Content -Path "$d\settings.json" -Value $rule -Encoding UTF8
+}
+```
+
+Every other action still goes through Claude Code's auto-mode review. (On macOS you can also use **Use → Create all** in the Templates page. On Windows that form has a bug, see [Windows notes](#windows-notes).)
 
 ### 4. Onboard a client
 In Discord `#glass-hq`, pick **@glass-scoper** from the autocomplete (it's a Discord *role* Switch creates for each agent) and write the client's username as plain text:
