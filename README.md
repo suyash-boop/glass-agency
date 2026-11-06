@@ -113,7 +113,14 @@ Then let an agent run it. In the **switch-buddy** chat in Console:
 
 ![switch-buddy hires the studio](docs/screenshots/01-switch-buddy-hires-the-studio.png)
 
-Four agents and a private `#glass-hq` channel appear in Discord, and each agent introduces itself. (On macOS you can also use **Use → Create all** in the Templates page. On Windows that form has a bug, see [Windows notes](#windows-notes).)
+Four agents and a private `#glass-hq` channel appear in Discord, and each agent introduces itself.
+
+**Give the scoper and invoicer their toolkit.** Claude Code's auto mode (rightly) won't let an agent clone and run code from the internet on its own, so clone this repo into their working directories yourself:
+
+```bash
+cd ~/.switch/agents/localhost-<api-port>/glass-scoper   && git clone https://github.com/suyash-boop/glass-agency .
+cd ~/.switch/agents/localhost-<api-port>/glass-invoicer && git clone https://github.com/suyash-boop/glass-agency .
+``` (On macOS you can also use **Use → Create all** in the Templates page. On Windows that form has a bug, see [Windows notes](#windows-notes).)
 
 ### 4. Onboard a client
 In Discord `#glass-hq`, pick **@glass-scoper** from the autocomplete (it's a Discord *role* Switch creates for each agent) and write the client's username as plain text:
