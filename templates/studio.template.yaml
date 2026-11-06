@@ -31,9 +31,10 @@ params:
     type: provider
     default: [claude, opencode, codex]
     input: advanced
-  location:
-    type: location
-    default: local
+  machine:
+    type: machine
+    description: The machine the agents run on (this computer's agents controller)
+    default: [$first]
     input: advanced
   directory:
     type: directory
@@ -51,7 +52,7 @@ agents:
     addressing: anyone
     allow_existing: true
     provider: "{provider}"
-    location: "{location}"
+    machine: "{machine}"
     directory: "{directory}"
     repo: "{toolkit_repo}"
     instructions: |
@@ -110,7 +111,7 @@ agents:
     addressing: owner-agents
     allow_existing: true
     provider: "{provider}"
-    location: "{location}"
+    machine: "{machine}"
     directory: "{directory}"
     instructions: |
       You are the builder at {studio}. You only take instructions from the
@@ -144,7 +145,7 @@ agents:
     addressing: owner-agents
     allow_existing: true
     provider: "{provider}"
-    location: "{location}"
+    machine: "{machine}"
     directory: "{directory}"
     instructions: |
       You are QA at {studio}. You take work from the founder and the studio's
@@ -172,7 +173,7 @@ agents:
     addressing: owner-agents
     allow_existing: true
     provider: "{provider}"
-    location: "{location}"
+    machine: "{machine}"
     directory: "{directory}"
     repo: "{toolkit_repo}"
     instructions: |
