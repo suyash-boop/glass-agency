@@ -1,0 +1,103 @@
+# Glass Agency — onboard a client (run per client, by the founder or by the scoper).
+#
+# Creates two linked rooms:
+#   <client>            the client's room: client + founder + agency agents.
+#   <client>-deal-desk  private: founder + scoper + invoicer. Prices, margins,
+#                       approvals. Linked from the client room as "deal desk".
+# Save it in Switch Console as "glass new client" (or "<studio> new client").
+version: 1
+
+params:
+  client:
+    type: string
+    label: Client slug
+    description: Short id for the client, used in room names
+    pattern: "[a-z][a-z0-9-]*"
+  client_name:
+    type: string
+    label: Client display name
+  client_user:
+    type: user
+    label: Client's Discord username
+  studio:
+    type: string
+    default: glass
+    input: advanced
+  scoper:
+    type: agent
+    default: [glass-scoper]
+    input: advanced
+  builder:
+    type: agent
+    default: [glass-builder]
+    input: advanced
+  qa:
+    type: agent
+    default: [glass-qa]
+    input: advanced
+  invoicer:
+    type: agent
+    default: [glass-invoicer]
+    input: advanced
+  bridge:
+    type: bridge
+    default: [Discord, $first]
+
+group:
+  name: "{studio} · {client_name}"
+  description: Client project for {client_name}
+
+rooms:
+  - name: "{client}"
+    description: "{client_name} × {studio} — your project room"
+    bridge: "{bridge}"
+    channel_type: channel_private
+    agents: ["{scoper}", "{builder}", "{qa}", "{invoicer}"]
+    users: ["{$creator}", "{client_user}"]
+    instructions: |
+      This is the project room for {client_name}, a client of {studio}. The
+      client ({client_user}) is a member and reads everything posted here.
+
+      Who does what:
+      - {scoper} is the client's account lead and the only agent that takes
+        requests from the client.
+      - {builder} builds and publishes the site, {qa} tests it, {invoicer}
+        bills. They take work only from the founder and studio agents.
+      - Prices and approvals are handled in the linked deal desk, which the
+        client cannot see. Never repeat costs, margins or deal-desk discussion
+        here.
+      The current scope lives in the room document `scope`.
+    docs:
+      - name: how-we-work
+        description: What the client can expect from the studio
+        instructions: Share or summarise this when the client asks how the process works.
+        content: |
+          # Working with {studio}
+          - Tell @{scoper} what you need. It will ask a few questions and write a scope.
+          - You get a fixed quote before any work starts. Reply "accept" to start.
+          - You watch the build happen here: the live preview link, QA results and fixes.
+          - New ideas mid-project are welcome; they're quoted as change requests first.
+          - When you're happy, reply "approved" and you'll receive your invoice here.
+    kickoff: |
+      @{scoper} {client_name} has joined. Welcome them in two lines, explain
+      what you'll do (link the how-we-work document), and ask what they need.
+  - name: "{client}-deal-desk"
+    description: "Private deal desk for {client_name}: quotes, margins, approvals"
+    bridge: "{bridge}"
+    channel_type: channel_private
+    agents: ["{scoper}", "{invoicer}"]
+    users: ["{$creator}"]
+    instructions: |
+      Private deal desk for {client_name}. Founder and studio agents only — the
+      client cannot see this room. The scoper posts internal quotes and change
+      requests here for founder approval; the invoicer posts draft invoices
+      here. Nothing priced is offered to the client until the founder writes
+      "approved" here.
+    kickoff: |
+      @{scoper} this is the deal desk for {client_name}. Confirm in one line
+      that you'll bring every quote and change request here for approval.
+
+links:
+  - from: "{client}"
+    to: "{client}-deal-desk"
+    label: deal desk

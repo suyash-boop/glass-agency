@@ -1,0 +1,21 @@
+{
+  "studio": "Glass Agency",
+  "currency": "USD",
+  "hourly_cost": 25,
+  "target_margin": 0.4,
+  "rush_multiplier": 1.25,
+  "rush_threshold_days": 5,
+  "tax_rate": 0.0,
+  "items": {
+    "landing_page":   { "label": "Single-page website (up to 5 sections)", "hours": 10 },
+    "extra_section":  { "label": "Additional page section",               "hours": 1.5 },
+    "contact_form":   { "label": "Contact / enquiry form",                 "hours": 2 },
+    "whatsapp_button":{ "label": "WhatsApp / call-to-action button",       "hours": 0.5 },
+    "menu_or_catalog":{ "label": "Menu or product catalog section",        "hours": 3 },
+    "gallery":        { "label": "Photo gallery",                          "hours": 2 },
+    "seo_basics":     { "label": "SEO basics (meta, sitemap, OG tags)",    "hours": 1.5 },
+    "copywriting":    { "label": "Copywriting for all sections",           "hours": 3 },
+    "blog":           { "label": "Blog section with 3 starter posts",      "hours": 6 },
+    "revision_round": { "label": "Extra revision round",                   "hours": 2 }
+  }
+}
