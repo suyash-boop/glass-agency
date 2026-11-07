@@ -11,7 +11,12 @@ Built for the [Flip the Switch hackathon](https://www.wemakedevs.org/hackathons/
 
 > Small agencies and freelancers lose hours every week to "what's the status?" emails, scope creep, and quotes nobody double-checked. Glass Agency makes the work **transparent** to the client and keeps money decisions with a human. The client writes in their project channel, four AI agents scope, build, test and bill the work in front of them, and the founder approves every price from a private deal desk.
 
-**🎬 Demo video:** _coming soon_
+<p align="center">
+  <a href="https://youtu.be/iT23r25aiKE"><img src="https://img.youtube.com/vi/iT23r25aiKE/maxresdefault.jpg" alt="Watch the Glass Agency demo" width="720" /></a><br/>
+  <b>🎬 <a href="https://youtu.be/iT23r25aiKE">Watch the 2½-minute demo</a></b>
+</p>
+
+**Example output:** in the demo, the agents scoped, built, deployed and QA-tested this site for the test client: [suyash-boop.github.io/glass-inkwell-site](https://suyash-boop.github.io/glass-inkwell-site/)
 
 | The studio's AI staff checks in | A client room the client can see | The private deal desk |
 |---|---|---|
